@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 
 class CategoryController extends Controller
 {
@@ -22,8 +23,11 @@ class CategoryController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'slug' => 'required|string|unique:categories,slug',
+            'slug' => 'nullable|string|unique:categories,slug',
         ]);
+
+      
+        $validated['slug'] = $request->slug ? Str::slug($request->slug) : Str::slug($request->name);
 
         $category = Category::create($validated);
 
@@ -65,8 +69,15 @@ class CategoryController extends Controller
 
         $validated = $request->validate([
             'name' => 'sometimes|required|string|max:255',
-            'slug' => 'sometimes|required|string|unique:categories,slug,' . $id,
+            'slug' => 'nullable|string|unique:categories,slug,' . $id,
         ]);
+
+        // Jika nama diubah dan slug tidak diinput, update slug dari name yang baru
+        if ($request->has('name') && !$request->filled('slug')) {
+            $validated['slug'] = Str::slug($request->name);
+        } elseif ($request->filled('slug')) {
+            $validated['slug'] = Str::slug($request->slug);
+        }
 
         $category->update($validated);
 
