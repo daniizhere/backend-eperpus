@@ -11,9 +11,7 @@ class DatabaseSeeder extends Seeder
 public function run(): void
 
 {
-    $this->call([
-        UserSeeder::class,
-    ]);
+    
 // 1. Buat data kategori master secara manual
 $cat1 = Category::create(['name' => 'Pemrograman & IT', 'slug' => 'pemrograman-it']);
 $cat2 = Category::create(['name' => 'Novel & Fiksi', 'slug' => 'novel-fiksi']);

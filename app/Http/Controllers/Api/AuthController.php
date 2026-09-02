@@ -8,7 +8,28 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
-    public function login(Request $request)
+    public function register(Request $request)
+    {
+    $request->validate([
+    'name' => 'required|string|max:255',
+    'email' => 'required|string|email|max:255|unique:users',
+    'password' => 'required|string|min:8',
+    ]);
+    $user = User::create([
+    'name' => $request->name,
+    'email' => $request->email,
+    'password' => Hash::make($request->password),
+    ]);
+    $token = $user->createToken('eperpus-token')->plainTextToken;
+    return response()->json([
+    'status' => true,
+    'message' => 'Registrasi berhasil',
+    'access_token' => $token,
+    'token_type' => 'Bearer',
+    'user' => $user,
+    
+    ], 201);
+    }    public function login(Request $request)
     {
         $request->validate([
             'email' => 'required|email',

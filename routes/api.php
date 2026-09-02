@@ -8,6 +8,8 @@ use App\Http\Controllers\Api\CategoryController;
 
 // 1. Endpoint Login (Terbuka/Public)
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/register', [AuthController::class, 'register']);
+
 
 // 2. Endpoint Terproteksi Token Sanctum
 Route::middleware('auth:sanctum')->group(function () {
